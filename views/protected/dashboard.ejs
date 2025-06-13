@@ -1,4 +1,80 @@
 <%- include('../partials/header')%>
-      Welcome to your dashboard, <%= user.name %>!
-      <a href="/logout">logout</a>
+
+
+<section class="dashboard">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2>
+      Welcome
+      <span class="username"><%= user.username %></span>
+    </h2>
+    <ul>
+      <li><a href="/profile">View Posts</a></li>
+      <li><a href="/profile">Home</a></li>
+      <li><a href="/profile">Profile</a></li>
+      <li><a href="/settings">Settings</a></li>
+    </ul>
+    <a href="/logout" class="logout-btn">Logout</a>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <section class="card-grid">
+      <div class="card">
+        <h2>Your Posts</h2>
+        <p>You currently have no posts.</p>
+      </div>
+      <div class="card">
+        <h2>Your Posts</h2>
+        <p>You currently have no posts.</p>
+      </div>
+      <div class="card">
+        <h2>Your Posts</h2>
+        <p>You currently have no posts.</p>
+      </div>
+    </section>
+
+    <h2 class="section-heading">Recent Posts</h2>
+
+    <section class="post-grid">
+    <div class="posts-list px-2 sm:px-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <% posts.forEach(post => { %>
+      <div class="post-card bg-white px-4 pb-10 rounded-lg shadow">
+        <img src="/image/blog/<%=post.image%>" alt="">
+        <span class="flex justify-between items-center mt-2">
+          <p>
+            <span class="text-gray-500 text-sm">
+              <%= post.likes %>    </span>
+            <i class="fas fa-heart text-red-500"></i>
+          </p>
+        <p>
+            <%=post.comments.length %>
+            <i class="fa fa-comment text-gray-500"></i>
+        </p>
+        </span>
+        </span>
+        <h2 class="font-bold"><%= post.title %></h2>
+        <p class="text-sm text-gray-400 h-10 w-full
+             overflow-hidden"><%= post.content %> <span>...</span></p>
+        <a href="/posts/getOne/<%= post._id %>" class="read-more text-blue-500">Read More</a>
+      </div>
+      <% }) %>
+      <% if (posts.length <= 0 ){ %>
+      <div class="w-full col-span-3 text-center text-gray-500">
+        <p>No posts available at the moment. Please check back later.</p>
+        <% } %>
+    </div>
+  </div>
+
+    </section>
+  </main>
+</section>
+<script>
+    const toggleBtn = document.getElementById('sidebar-toggle');
+  const sidebar = document.getElementById('sidebar');
+
+  toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('-translate-x-full');
+  });
+</script>
 <%- include('../partials/footer') %>

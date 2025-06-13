@@ -1,0 +1,35 @@
+<%- include('../partials/header')%>
+
+<section class="">
+    <div class="pb-4">
+        <div class="post mb-10">
+        <h1 class="text-3xl font-bold text-center mb-4"><%= post.title %></h1>
+        <p class="text-center text-gray-600 mb-8">Posted by <%= post.author %> on <%= new Date(post.createdAt).toLocaleDateString() %></p>
+        </div>
+        <div class="post-content px-2 sm:px-20 shadow-lg w-[80%] sm:w-[60%] mx-auto bg-white rounded-lg p-6">
+        <% if (post.image) { %>
+        <div class="post-image mb-8 w-full max-w-2xl h-72 mx-auto relative overflow-hidden  rounded-xl flex
+         justify-center items-center">
+            <img src="/image/blog/<%= post.image %>" alt="Post Image" class="object-cover h-full transition-transform duration-300 hover:scale-105" loading="lazy">
+        </div>
+        <% } %>
+         <span class="flex justify-between items-center mt-2">
+            <p>
+            <span class="text-gray-500 text-sm"><%= post.likes %></span>
+            <i class="fas fa-heart text-red-500"></i>
+            </p>
+            <p>
+            <%= post.comments.length %> Comments
+            <i class="fa fa-comment text-gray-500"></i>
+            </p>
+        </span>
+        <p  class="text-gray-800 text-xl mb-2 font-bold">
+            <%= post.title%>
+        </p>
+        
+        <p class="text-gray-600 mb-6 text-sm"><%= post.content %></p>
+       
+        </div>
+    </div>
+</section>
+<%-include("../partials/footer") %>

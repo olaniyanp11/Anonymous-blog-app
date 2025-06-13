@@ -1,7 +1,125 @@
 <%- include('./partials/header') %>
+<section>
+  <div class="hero">
+    <h1
+      class="sm:text-[70px] text-[55px] font-bold w-[85%] sm:w-[75%] text-center tracking-tight main"
+    >
+      Anonymous <span class="text-blue-500">Thoughts</span>, Unfiltered. 
+    </h1>
+    <p class="w-[80%] text-sm text-center text-gray-500 my-3 sm:w-[60%]">
+      Welcome to our anonymous blog. Share your thoughts, stories, and opinions
+      without revealing your identity. Read what others are saying
+    </p>
+    <a href="/posts/create" class="a">Write a New Post</a>
+  </div>
+</section>
 
-<h1>
-    Login Authentication 
-</h1>
+<section class="w-full relative py-10 bg-gray-200">
+  <!-- <img
+    src="/image/res.jpg"
+    alt=""
+    class="w-[70%] h-full object-cover text-center mx-auto rounded-[20px] shadow-xl"
+  /> -->
+  <div
+    class="h-full relative w-[70%] mx-auto rounded-[20px] shadow-xl overflow-hidden"
+  >
+    <video
+      src="/image/mn.mp4"
+      loop
+      autoplay
+      muted
+      class="h-full object-cover text-center rounded-[20px] shadow-xl"
+    ></video>
+    <div
+      class="text-center font-bold text-xl uppercase bg-gray-900 absolute text-white w-full opacity-[0.7] h-full top-0 object-cover flex justify-center items-center text-gray-500"
+    >
+      Your Identity is safe
+    </div>
+  </div>
+</section>
+<section
+  class="grid sm:grid-cols-2 grid-cols-1 p-10 py-20 items-center gap-5"
+>
+  <div class="w-full relative">
+    <img src="/image/right.jpg" alt="" class="rounded-md w-80%" />
+  </div>
+  <div>
+    <h2
+      class="font-bold border-blue-500 border-l-2 border-y-0 border-r-0 pl-5 text-gray-700 text-3xl"
+    >
+      Overview
+    </h2>
+    <p class="tracking-wider text-sm pt-5 pb-2">
+      This platform is designed to serve as a digital space for anonymous
+      storytelling, idea sharing, and expression. In an era where social
+      pressure and digital surveillance often discourage honesty, this blog site
+      gives users the freedom to write and read uncensored thoughts—without the
+      need to disclose identity.
+    </p>
+    <h2 class="font-bold text-gray-700 text-md">Objective of the Platform</h2>
+    <ul class="text-sm list-disc pl-10 tracking-wider" type="circle">
+      <li>
+        To promote freedom of expression by removing the barrier of identity.
+      </li>
+      <li>
+        To create a safe and judgment-free space for users to share sensitive
+        stories or confessions.
+      </li>
+      <li>
+        To allow students, creatives, and writers to explore raw writing without
+        fear of criticism or exposure.
+      </li>
+      <li>
+        To protect users' digital privacy and anonymity through a no-login,
+        no-tracking architecture
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="use-cases-section">
+  <div class="use-cases-container p-2 sm:p-10">
+    <h2 class="section-heading">📚 Use Cases</h2>
+    <div class="columns grid grid-cols-1  sm:grid-cols-2 md:grid-cols-3 gap-10 px-3 sm:px-10">
+      <div class="column shadow-xl">
+        <div class="text-center">
+          <i class="fa fa-book text-gray-900 text-2xl" aria-hidden="true"></i>
+        </div>
+        <p>Polytechnic Students expressing academic or emotional challenges anonymously.</p>
+        <a href="" class="w-full p-3 text-center b bg-blue-500">
+          Share Anonymously</a
+        >
+      </div>
+      <div class="column">
+        <div class="text-center">
+          <i class="fa fa-users text-gray-900 text-2xl" aria-hidden="true"></i>
+        </div>
+        <p>
+          Individuals sharing stories of trauma, healing, or personal
+          transformation.
+        </p>
+        <a href="" class="w-full p-3 text-center b bg-blue-500">
+          Share Anonymously</a
+        >
+      </div>
+      <div class="column">
+        <div class="text-center">
+          <i
+            class="fa fa-shield-alt text-gray-900 text-2xl"
+            aria-hidden="true"
+          ></i>
+        </div>
+        <p>
+          General users who need a safe space to speak out without digital
+          footprints.
+        </p>
+        <a href="" class="w-full p-3 text-center b bg-blue-500">
+          Share Anonymously</a
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <%- include('./partials/footer') %>

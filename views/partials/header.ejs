@@ -1,12 +1,98 @@
 <!-- partials/header.ejs -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
+  <!-- <meta http-equiv="refresh" content="5" /> -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= title || "E-Learning App" %></title>
+  <title><%= title || "Blog App" %></title>
+  <link rel="stylesheet" href="/css/dash.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/post.css">
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-800">
+
+<body class="bg-gray-100 text-gray-800 w-full min-h-screen">
+  <!-- Navigation Bar -->
+  <nav class="bg-gray-100 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <!-- Logo -->
+        <a href="/" class="text-2xl font-bold text-gray-800">AB</a>
+
+        <!-- Desktop Menu -->
+        <ul class="hidden md:flex space-x-6 items-center">
+          <li>
+            <a href="/" class="text-gray-700 hover:text-black transition duration-300">Home</a>
+          </li>
+          <li>
+            <a href="/posts/all" class="text-gray-700 hover:text-black transition duration-300">Posts</a>
+          </li>
+          <% if (loggedIn) { %>
+          <li>
+            <a href="/dashboard" class="text-gray-700 hover:text-black transition duration-300">Dashboard</a>
+          </li>
+          <li>
+            <a href="/posts/create" class="text-gray-700 hover:text-black transition duration-300">CreatePost</a>
+          </li>
+          <% } else { %>
+          <% } %>
+        </ul>
+
+        <!-- Login Button -->
+        <% if (loggedIn) { %>
+        <a href="/logout" class="hidden md:inline-block px-10 py-2 rounded-full bg-red-500 text-white hover:bg-white hover:text-black border border-red-500 transition duration-300">
+          Logout
+        </a>
+        <% } else { %>
+        <a href="/login" class="hidden md:inline-block px-10 py-2 rounded-full bg-blue-500 text-white hover:bg-white hover:text-black border border-blue-500 transition duration-300">
+          Login
+        </a>
+        <% } %>
+        <!-- Mobile Menu Button -->
+        <button id="menu-toggle" class="md:hidden text-gray-800 focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Menu Items -->
+      <!-- Menu Toggle Button (example) -->
+      <button id="menu-toggle" class="md:hidden text-white p-2 bg-gray-700">
+        ☰
+      </button>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="mobile-menu md:hidden">
+        <a href="/" class="menu-link">Home</a>
+        <a href="/posts" class="menu-link">Posts</a>
+
+        <% if (loggedIn) { %>
+        <a href="/logout" class="menu-button bg-red-500 border-red-500">Logout</a>
+        <% } else { %>
+        <a href="/login" class="menu-button bg-blue-500 border-blue-500">Login</a>
+        <% } %>
+      </div>
+
+    </div>
+  </nav>
+
+  <script>
+    const toggle = document.getElementById("menu-toggle");
+    const menu = document.getElementById("mobile-menu");
+
+    toggle.addEventListener("click", () => {
+      menu.classList.toggle("show");
+    });
+  </script>
+</body>
+
+</html>
