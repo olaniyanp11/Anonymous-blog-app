@@ -3,7 +3,14 @@
 
 <section class="dashboard">
   <!-- Sidebar -->
-  <aside class="sidebar">
+<div id="sidebar-wrapper" class="flex">
+  <!-- Arrow Toggle Button -->
+  <button id="toggle-sidebar" class="bg-gray-800 text-white p-2 rounded-r fixed top-[50%] right-0 z-50 transition-all duration-300">
+    <i class="fas fa-chevron-left"></i>
+  </button>
+
+  <!-- Sidebar -->
+  <aside class="sidebar transition-all duration-300" id="sidebar">
     <h2>
       Welcome
       <span class="username"><%= user.username %></span>
@@ -16,25 +23,34 @@
     </ul>
     <a href="/logout" class="logout-btn">Logout</a>
   </aside>
+</div>
+
 
   <!-- Main Content -->
   <main class="main-content">
     <section class="card-grid">
       <div class="card">
+        <i class="fa fa-house  text-red-500"></i>
         <h2>Your Posts</h2>
-        <p>You currently have no posts.</p>
+        <p><%=posts.length %></p>
       </div>
       <div class="card">
-        <h2>Your Posts</h2>
-        <p>You currently have no posts.</p>
+        <i class="fa fa-users text-blue-500"></i>
+        <h2> Total Posts engagements</h2>
+        <p><%= posts.reduce((acc, post) => acc + post.likes.length -1, 0) %> Likes</p>
+        <p><%= posts.reduce((acc, post) => acc + post.comments.length, 0) %> Comments</p>
+
       </div>
       <div class="card">
-        <h2>Your Posts</h2>
-        <p>You currently have no posts.</p>
+        <i class="fa fa-comments text-green-500"></i>
+        <h2>Anonymous Tips</h2>
+        <p>Share your thoughts freely. Your identity is always protected.</p>
       </div>
     </section>
 
-    <h2 class="section-heading">Recent Posts</h2>
+    <h2 class="section-heading">
+      <i class="fa fa-history text-blue-500"></i>
+      Recent Posts</h2>
 
     <section class="post-grid">
     <div class="posts-list px-2 sm:px-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -44,12 +60,13 @@
         <span class="flex justify-between items-center mt-2">
           <p>
             <span class="text-gray-500 text-sm">
-              <%= post.likes %>    </span>
-            <i class="fas fa-heart text-red-500"></i>
+               <%= post.likes.length - 1%>
+          
+            <i class="fas fa-heart <%= post.likes.includes(user._id) ? 'text-red-500' : 'text-gray-400' %> cursor-pointer" onclick="likePost('<%= post._id %>')"></i>
           </p>
         <p>
             <%=post.comments.length %>
-            <i class="fa fa-comment text-gray-500"></i>
+           <a href="/posts/getOne/<%= post._id %>"> <i class="fa fa-comment text-gray-500"></i></a>
         </p>
         </span>
         </span>
@@ -70,11 +87,44 @@
   </main>
 </section>
 <script>
-    const toggleBtn = document.getElementById('sidebar-toggle');
+
+  // 📨 Like Post
+function likePost(postId) {
+
+    fetch(`/posts/like/${postId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      window.location.reload(); // Reload the page to reflect the new like count
+      console.log('Like response:', data);
+      // Optionally, you can update the UI to reflect the new like count
+      // For example, you can find the post card and update the like count
+    })
+    .catch(error => console.error('Error liking post:', error));
+  };
+</script>
+<script>
+  const toggleBtn = document.getElementById('toggle-sidebar');
   const sidebar = document.getElementById('sidebar');
 
   toggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('-translate-x-full');
+    sidebar.classList.toggle('released');
+    toggleBtn.classList.toggle('released');
+
+    // Swap arrow icon
+    const icon = toggleBtn.querySelector('i');
+    if (sidebar.classList.contains('collapsed')) {
+      icon.classList.remove('fa-chevron-left');
+      icon.classList.add('fa-chevron-right');
+    } else {
+      icon.classList.remove('fa-chevron-right');
+      icon.classList.add('fa-chevron-left');
+    }
   });
 </script>
+
 <%- include('../partials/footer') %>

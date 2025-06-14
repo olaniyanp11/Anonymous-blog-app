@@ -23,17 +23,20 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-router.get('/all', async (req, res) => {
+router.get('/all',authenticateToken, async (req, res) => {
     const error = req.query.error || null;
+    const user = req.user || null; // Get the user from the request
+    const comments = await Comment.find().sort({ createdAt: -1 });
+    console.log('User:', user);
     const posts = await Post.find().sort({ createdAt: -1 });
-    console.log(error)
-      const loggedIn = req.cookies.loggedIn || false;
+    const loggedIn = req.cookies.loggedIn || false;
     console.log('Fetching posts');
-    res.render('posts', {title: "Posts", posts: posts, loggedIn: loggedIn, error });
+    res.render('posts', {title: "Posts", posts: posts, loggedIn: loggedIn, error,user,comments  });
 })
 router.get('/getOne/:id', authenticateToken,  async (req, res) => {
     const postId = req.params.id;
     console.log(`Fetching post with ID: ${postId}`);
+    const comments = await Comment.find({ postId }).sort({ createdAt: -1 });
 
     try {
         const post = await Post.findById({_id: postId}); // shorter & safer
@@ -46,6 +49,8 @@ router.get('/getOne/:id', authenticateToken,  async (req, res) => {
             title: "Post Details",
             post,
             loggedIn: req.cookies.loggedIn || false,
+            comments: comments,
+            user: req.user || null, // Pass the user object to the view
             error: null
         });
     } catch (err) {
@@ -87,6 +92,65 @@ router.post('/create', authenticateToken, upload.single('image'), async (req, re
     } catch (err) {
         console.error('Error creating post:', err);
         res.redirect('/posts/create?error=CreationFailed');
+    }
+});
+// routes/posts.js
+router.post('/like/:id',authenticateToken, async (req, res) => {
+  try {
+
+    if (!req.user) return res.status(401).json({ success: false, message: "Not authenticated" });
+
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ success: false, message: "Post not found" });
+
+    const userId = req.user.userId; // Assuming userId is stored in req.user
+    console.log(`User ID: ${userId}, Post ID: ${post._id}`);
+    const alreadyLiked = post.likes.includes(userId);
+
+    if (alreadyLiked) {
+      post.likes.pull(userId);
+    } else {
+      post.likes.push(userId);
+    }
+
+    await post.save();
+    res.json({ success: true, liked: !alreadyLiked });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+router.post('/comment/:id', authenticateToken, async (req, res) => {
+    const postId = req.params.id;
+    console.log(req.body);
+    const { content } = req.body;
+    const userId = req.user.userId;
+
+    if (!content || !userId) {
+        return res.status(400).json({ success: false, message: "Content and user ID are required" });
+    }
+
+    try {
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.status(404).json({ success: false, message: "Post not found" });
+        }
+        const user = await User.findById(userId);
+        const comment = new Comment({
+            content,
+            postId,
+            username: user.username // Assuming username is stored in req.user
+        });
+
+        await comment.save();
+        post.comments.push(comment._id);
+        await post.save();
+
+        res.json({ success: true, comment });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: err.message });
     }
 });
 
