@@ -6,6 +6,7 @@ const Comment = require('../models/Comment');
 const authenticateToken   = require('../middlewares/checkLog');
 const multer = require('multer');
 const path = require('path');
+const isAdmin = require('../middlewares/isAdmin');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -24,6 +25,7 @@ const upload = multer({ storage: storage });
 
 
 router.get('/all',authenticateToken, async (req, res) => {
+    const isAdmin = req.isAdmin || false; // Check if the user is an admin
     const error = req.query.error || null;
     const user = req.user || null; // Get the user from the request
     const comments = await Comment.find().sort({ createdAt: -1 });
@@ -31,9 +33,10 @@ router.get('/all',authenticateToken, async (req, res) => {
     const posts = await Post.find().sort({ createdAt: -1 });
     const loggedIn = req.cookies.loggedIn || false;
     console.log('Fetching posts');
-    res.render('posts', {title: "Posts", posts: posts, loggedIn: loggedIn, error,user,comments  });
+    res.render('posts', {title: "Posts", posts: posts, loggedIn: loggedIn, error,user,comments, isAdmin: isAdmin }) 
 })
 router.get('/getOne/:id', authenticateToken,  async (req, res) => {
+    const isAdmin = req.isAdmin || false; // Check if the user is an admin
     const postId = req.params.id;
     console.log(`Fetching post with ID: ${postId}`);
     const comments = await Comment.find({ postId }).sort({ createdAt: -1 });
@@ -51,7 +54,8 @@ router.get('/getOne/:id', authenticateToken,  async (req, res) => {
             loggedIn: req.cookies.loggedIn || false,
             comments: comments,
             user: req.user || null, // Pass the user object to the view
-            error: null
+            error: null,
+            isAdmin: isAdmin
         });
     } catch (err) {
         console.error(err);
@@ -60,8 +64,9 @@ router.get('/getOne/:id', authenticateToken,  async (req, res) => {
 });
 router.get('/create', authenticateToken, (req, res) => {
     const error = req.query.error || null;
+    const isAdmin = req.isAdmin || false; // Check if the user is an admin
 
-    res.render('protected/createpost', {title: "Create Post", loggedIn: req.cookies.loggedIn || false, error});
+    res.render('protected/createpost', {title: "Create Post", loggedIn: req.cookies.loggedIn || false, error,isAdmin});
 });
 router.post('/create', authenticateToken, upload.single('image'), async (req, res) => {
     const { title, content } = req.body;
@@ -97,7 +102,6 @@ router.post('/create', authenticateToken, upload.single('image'), async (req, re
 // routes/posts.js
 router.post('/like/:id',authenticateToken, async (req, res) => {
   try {
-
     if (!req.user) return res.status(401).json({ success: false, message: "Not authenticated" });
 
     const post = await Post.findById(req.params.id);
@@ -153,5 +157,34 @@ router.post('/comment/:id', authenticateToken, async (req, res) => {
         res.status(500).json({ success: false, message: err.message });
     }
 });
+
+router.get('/delete/:id', authenticateToken,isAdmin, async (req, res) => {
+    const postId = req.params.id;
+    try {
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.redirect('/posts/all?error=PostNotFound');
+        }   
+        // Delete all comments associated with the post
+    if(post.image) {
+            const imagePath = path.join(__dirname, '../public/image/blog/', post.image);
+            try {
+                // Delete the image file from the server
+                require('fs').unlinkSync(imagePath);
+                console.log(`Image ${post.image} deleted successfully`);
+            } catch (err) {
+                console.error('Error deleting image:', err);
+            }
+    }
+        await Comment.deleteMany({ postId: post._id });
+        // Delete the post itself
+        await Post.findByIdAndDelete(postId);
+        console.log(`Post with ID ${postId} deleted successfully`);
+        res.redirect('/posts/all');
+    } catch (err) {
+        console.error('Error deleting post:', err);
+        res.redirect('/posts/all?error=DeletionFailed');
+    }
+})
 
 module.exports = router;

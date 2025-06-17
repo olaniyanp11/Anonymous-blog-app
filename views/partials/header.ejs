@@ -76,6 +76,9 @@
           <% if (loggedIn) { %>
             <li><a href="/dashboard" class="text-gray-700 hover:text-black">Dashboard</a></li>
             <li><a href="/posts/create" class="text-gray-700 hover:text-black">CreatePost</a></li>
+             <% if (isAdmin) {%>
+          <a href="/admin/users" class="text-gray-700 hover:text-black">view all users</a>
+          <% } %>
           <% } %>
         </ul>
 
@@ -105,8 +108,11 @@
         <a href="/posts/all" class="text-gray-700 hover:text-black">Posts</a>
         <% if (loggedIn) { %>
           <a href="/dashboard" class="text-gray-700 hover:text-black">Dashboard</a>
-          <a href="/posts/create" class="text-gray-700 hover:text-black">CreatePost</a>
-          <a href="/logout" class="text-red-500 hover:text-black">Logout</a>
+          <a href="/posts/create" class="text-gray-700 hover:text-black">CreatePost </a>
+          <a href="/logout" class="text-red-500 hover:text-black">Logout </a>
+          <% if (isAdmin === true) {%>
+          <a href="/admin/users" class="text-blue-500 hover:text-black">view all users</a>
+          <% } %>
         <% } else { %>
           <a href="/login" class="text-blue-500 hover:text-black">Login</a>
         <% } %>

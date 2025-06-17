@@ -9,44 +9,47 @@
 
     <div class="posts-list px-2 sm:px-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <% posts.forEach(post => { %>
-        <div class="post-card bg-white px-4 pb-10 rounded-lg shadow">
-          <img src="/image/blog/<%= post.image %>" alt="Post Image" class="w-full h-48 object-cover rounded-t-lg">
+      <div class="post-card bg-white px-4 pb-10 rounded-lg shadow">
+        <img src="/image/blog/<%= post.image %>" alt="Post Image" class="w-full h-48 object-cover rounded-t-lg">
 
-          <p class="text-gray-500 text-sm mt-2 mb-1">
-            Posted by <%= post.username %> on <%= new Date(post.createdAt).toLocaleDateString() %>
-          </p>
+        <p class="text-gray-500 text-sm mt-2 mb-1">
+          Posted by <%= post.username %> on <%= new Date(post.createdAt).toLocaleDateString() %>
+        </p>
 
-          <div class="flex justify-between items-center mt-2 mb-2">
-            <p class="flex items-center gap-1 text-sm text-gray-600">
-              <%= post.likes.length - 1%>
-              <i class="fas fa-heart 
+        <div class="flex justify-between items-center mt-2 mb-2">
+          <p class="flex items-center gap-1 text-sm text-gray-600">
+            <%= post.likes.length - 1%>
+            <i class="fas fa-heart 
              
                 <%= post.likes.includes(user.userId ) ? 'text-red-500' : 'text-gray-400' %> 
-                cursor-pointer" 
-                onclick="likePost('<%= post._id %>')">
-              </i>
-            </p>
-
-            <p class="flex items-center gap-1 text-sm text-gray-600">
-              <%= post.comments.length %>
-              <i class="fa fa-comment text-gray-500"></i>
-            </p>
-          </div>
-
-          <h2 class="font-bold text-lg mb-1"><%= post.title %></h2>
-
-          <p class="text-sm text-gray-600 h-10 overflow-hidden whitespace-nowrap text-ellipsis">
-            <%= post.content %> <span>...</span>
+                cursor-pointer" onclick="likePost('<%= post._id %>')">
+            </i>
           </p>
 
-          <a href="/posts/getOne/<%= post._id %>" class="read-more text-blue-500 underline mt-2 inline-block">Read More</a>
+          <p class="flex items-center gap-1 text-sm text-gray-600">
+            <%= post.comments.length %>
+            <a href="/posts/getOne/<%= post._id %>"> <i class="fa fa-comment text-gray-500"></i></a>
+
+          </p>
         </div>
+
+        <h2 class="font-bold text-lg mb-1"><%= post.title %></h2>
+
+        <p class="text-sm text-gray-600 h-10 overflow-hidden whitespace-nowrap text-ellipsis">
+          <%= post.content %> <span>...</span>
+        </p>
+
+        <a href="/posts/getOne/<%= post._id %>" class="read-more text-blue-500 underline mt-2 inline-block mb-3">Read More</a>
+      <p class="">
+          <a href="/posts/delete/<%=post._id %>" id="red" class=" bg-red-500 px-5 py-2  rounded-md text-white ">Delete Post</a>
+      </p>
+      </div>
       <% }) %>
 
       <% if (posts.length <= 0) { %>
-        <div class="w-full col-span-3 text-center text-gray-500">
-          <p>No posts available at the moment. Please check back later.</p>
-        </div>
+      <div class="w-full col-span-3 text-center text-gray-500">
+        <p>No posts available at the moment. Please check back later.</p>
+      </div>
       <% } %>
     </div>
   </div>
@@ -56,22 +59,22 @@
   document.addEventListener("DOMContentLoaded", () => {
     window.likePost = function(postId) {
       fetch(`/posts/like/${postId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Like response:', data);
-        
-        if (data.success) {
-          location.reload();
-        } else {
-          alert('Error liking post: ' + data.message);
-        }
-      })
-      .catch(error => console.error('Fetch error:', error));
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Like response:', data);
+
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error liking post: ' + data.message);
+          }
+        })
+        .catch(error => console.error('Fetch error:', error));
     }
   });
 </script>

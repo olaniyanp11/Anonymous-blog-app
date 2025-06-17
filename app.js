@@ -21,8 +21,9 @@ app.use('/', route);
 
 app.use((req, res, next)=>{
     const loggedIn = req.cookies.loggedIn || false;
+    const isAdmin = req.isAdmin || false;
     res.locals.loggedIn = loggedIn; // Make loggedIn available in all views
-    res.render('404', { title: '404 Not Found' });
+    res.render('404', { title: '404 Not Found',isAdmin, loggedIn });
 })
 
 app.listen(3000,

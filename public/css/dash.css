@@ -153,6 +153,9 @@
   text-decoration: none;
 }
 
+#red{
+  color: white;
+}
 .post-card a:hover {
   text-decoration: underline;
 }

@@ -1,28 +1,39 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/User'); // Ensure this is correctly imported
 
-function authenticateToken(req, res, next) {
+async function authenticateToken(req, res, next) {
   const token = req.cookies.token;
-  const loggedIn = req.cookies.loggedIn;
 
   if (!token) {
-    return res.redirect('/login'); // Or show an unauthorized page
+    return res.redirect('/login'); // No token, redirect to login
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret');
-    req.user = decoded; // Attach user data to request
-    req.loggedIn = loggedIn; // Attach loggedIn status to request
+    req.user = decoded;
+
+    const user = await User.findById(decoded.userId).select('-password');
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    req.loggedIn = true;
+    req.isAdmin = user.isAdmin || false;
+    
+
+    console.log('✅ User authenticated:', user.username);
     next();
+
   } catch (err) {
+    console.error('❌ Token verification failed:', err.message);
     res.clearCookie('token');
     res.clearCookie('loggedIn');
-    req.cookies.token = null; // Clear the token cookie
-    console.error('Token verification failed:', err);
-    req.loggedIn = false; // Ensure loggedIn is set to false if token verification fails
-    req.user = null; // Ensure user is set to null if token verification fails
-    return res.redirect('/login'); // Token expired or invalid
+    req.user = null;
+    req.loggedIn = false;
+    req.isAdmin = false;
+
+    return res.redirect('/login');
   }
 }
 
 module.exports = authenticateToken;
-// This middleware checks if the user is authenticated by verifying the JWT token.

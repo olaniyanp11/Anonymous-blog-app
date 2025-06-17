@@ -1,0 +1,86 @@
+<%-include("../../partials/header") %>
+<section class="dashboard">
+  <div id="sidebar-wrapper" class="flex">
+    <button id="toggle-sidebar" class="bg-gray-800 text-white p-2 rounded-r fixed top-[50%] right-0 z-50 transition-all duration-300">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <aside class="sidebar transition-all duration-300" id="sidebar">
+      <h2>Welcome <span class="username"><%= user.username %></span></h2>
+      <ul>
+        <li><a href="/profile">View Posts</a></li>
+        <li><a href="/profile">Home</a></li>
+        <li><a href="/profile">Profile</a></li>
+        <li><a href="/settings">Settings</a></li>
+      </ul>
+      <a href="/logout" class="logout-btn">Logout</a>
+    </aside>
+  </div>
+
+  <main class="main-content">
+    <section class="card-grid">
+      <div class="card">
+        <i class="fa fa-users text-blue-500"></i>
+        <h2>Total Users</h2>
+        <p><%= users.length %></p>
+      </div>
+
+      <div class="card">
+        <i class="fa fa-comments text-green-500"></i>
+        <h2>Anonymous Tips</h2>
+        <p>Share your thoughts freely. Your identity is always protected.</p>
+      </div>
+    </section>
+
+    <h2 class="section-heading"><i class="fa fa-users text-blue-500"></i> All Users</h2>
+
+    <section class=" flex flex-col gap-4 items-center justify-center w-full">
+      <% users.forEach(use => { %>
+      <% if(use._id !== user._id){ %>
+      <div class="user-card bg-white px-4 pb-10 rounded-lg shadow w-full">
+        <img src="/image/profile/<%= user.profileImage %>" alt="">
+        <span class="flex justify-between items-center mt-2">
+          <h3><%= use.username %></h3>
+          <% if (use.isAdmin) { %>
+          <span class="badge bg-red-500 px-5 py-2  rounded-md text-white">Admin</span>
+          <% } else { %>
+          <span class="badge bg-gray-500 px-5 py-2  rounded-md text-white">User</span>
+          <% } %>
+        </span>
+        <p>Joined: <%= new Date(use.createdAt).toLocaleDateString() %></p>
+        <div class="actions mt-4">
+          <a href="/admin/users/delete/<%= use._id %>" class="btn bg-red-500 px-5 py-2  rounded-md text-white">Delete</a>
+          <!-- btn to make user admin -->
+          <% if (!use.isAdmin) { %>
+          <a href="/admin/users/makeadmin/<%= use._id %>" class="btn bg-blue-500 px-5 py-2  rounded-md text-white">Make Admin</a>
+          <% } else { %>
+          <a href="/admin/users/removeadmin/<%= use._id %>" class="btn bg-yellow-500 px-5 py-2  rounded-md text-white">Remove Admin</a>
+          <% } %>
+        </div>
+      </div>
+      <% } %>
+      <% }) %>
+    </section>
+  </main>
+</section>
+<script>
+  const toggleBtn = document.getElementById('toggle-sidebar');
+  const sidebar = document.getElementById('sidebar');
+
+  toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('released');
+    toggleBtn.classList.toggle('released');
+
+    // Swap arrow icon
+    const icon = toggleBtn.querySelector('i');
+    if (sidebar.classList.contains('collapsed')) {
+      icon.classList.remove('fa-chevron-left');
+      icon.classList.add('fa-chevron-right');
+    } else {
+      icon.classList.remove('fa-chevron-right');
+      icon.classList.add('fa-chevron-left');
+    }
+  });
+</script>
+
+<%-include("../../partials/footer") %>
