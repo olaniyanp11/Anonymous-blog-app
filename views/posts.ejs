@@ -40,9 +40,11 @@
         </p>
 
         <a href="/posts/getOne/<%= post._id %>" class="read-more text-blue-500 underline mt-2 inline-block mb-3">Read More</a>
-      <p class="">
+   <% if(isAdmin){ %>
+       <p class="">
           <a href="/posts/delete/<%=post._id %>" id="red" class=" bg-red-500 px-5 py-2  rounded-md text-white ">Delete Post</a>
       </p>
+    <% } %>
       </div>
       <% }) %>
 
