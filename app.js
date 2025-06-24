@@ -4,6 +4,8 @@ const route = require('./routes/route');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const cookieparser = require('cookie-parser');
+const dotenv = require('dotenv')
+dotenv.config()
 
 
 const app = express();
@@ -29,7 +31,7 @@ app.use((req, res, next)=>{
 app.listen(3000,
     () => {
         console.log('🚀 Server running on http://localhost:3000')
-       mongoose.connect('mongodb+srv://tester:xuu8gKwGVPTyGKl6@cluster0.vgpzmvs.mongodb.net/anonymous-blog').then(()=>{
+       mongoose.connect(process.env.dbURL).then(()=>{
             console.log('✅ Connected to MongoDB');
         }).catch((err)=>{
             console.error('❌ Error connecting to MongoDB:', err);
