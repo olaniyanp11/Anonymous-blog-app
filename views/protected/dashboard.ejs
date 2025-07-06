@@ -14,15 +14,34 @@
     <!-- Sidebar -->
     <aside class="sidebar transition-all duration-300" id="sidebar" data-aos="fade-right" data-aos-duration="800">
       <h2>
+        <i class="fa fa-user-circle text-blue-500"></i>
         Welcome <span class="username"><%= user.username %></span>
       </h2>
       <ul>
-        <li><a href="/posts/all">View Posts</a></li>
-        <li><a href="/">Home</a></li>
-        <li><a href="/profile">Dashboard</a></li>
-        <li><a href="/posts/create">Create Post</a></li>
+        <li>
+          <a href="/posts/all">
+            <i class="fa fa-list-alt mr-2"></i>View Posts
+          </a>
+        </li>
+        <li>
+          <a href="/">
+            <i class="fa fa-home mr-2"></i>Home
+          </a>
+        </li>
+        <li>
+          <a href="/profile">
+            <i class="fa fa-tachometer-alt mr-2"></i>Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="/posts/create">
+            <i class="fa fa-plus-circle mr-2"></i>Create Post
+          </a>
+        </li>
       </ul>
-      <a href="/logout" class="logout-btn">Logout</a>
+      <a href="/logout" class="logout-btn">
+        <i class="fa fa-sign-out-alt mr-2"></i>Logout
+      </a>
     </aside>
   </div>
 

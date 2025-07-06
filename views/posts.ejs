@@ -17,20 +17,27 @@
         </p>
 
         <div class="flex justify-between items-center mt-2 mb-2">
-          <p class="flex items-center gap-1 text-sm text-gray-600">
-            <%= post.likes.length - 1%>
-            <i class="fas fa-heart 
-             
-                <%= post.likes.includes(user.userId ) ? 'text-red-500' : 'text-gray-400' %> 
-                cursor-pointer" onclick="likePost('<%= post._id %>')">
-            </i>
-          </p>
+<p class="flex items-center gap-1 text-sm text-gray-600 cursor-pointer">
+  <%= post.likes.length - 1 %>
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    class="w-5 h-5 cursor-pointer 
+      <%= post.likes.includes(user.userId) ? 'text-red-500' : 'text-gray-400' %>" 
+    viewBox="0 0 24 24" fill="currentColor" 
+    onclick="likePost('<%= post._id %>')">
+    <path d="M12.1 8.64l-.1.1-.11-.11C10.14 6.6 7.08 6.6 5.13 8.55c-1.95 1.95-1.95 5.12 0 7.07l6.36 6.36c.39.39 1.02.39 1.41 0l6.36-6.36c1.95-1.95 1.95-5.12 0-7.07-1.95-1.95-5.12-1.95-7.07 0z" />
+  </svg>
+</p>
 
-          <p class="flex items-center gap-1 text-sm text-gray-600">
-            <%= post.comments.length %>
-            <a href="/posts/getOne/<%= post._id %>"> <i class="fa fa-comment text-gray-500"></i></a>
+<p class="flex items-center gap-1 text-sm text-gray-600 cursor-pointer">
+  <%= post.comments.length %>
+  <a href="/posts/getOne/<%= post._id %>">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 3.866-3.582 7-8 7-1.264 0-2.453-.262-3.5-.732L3 20l1.732-5.196A7.963 7.963 0 013 12c0-3.866 3.582-7 8-7s8 3.134 8 7z" />
+    </svg>
+  </a>
+</p>
 
-          </p>
         </div>
 
         <h2 class="font-bold text-lg mb-1"><%= post.title %></h2>
